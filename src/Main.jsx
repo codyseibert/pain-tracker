@@ -24,20 +24,23 @@ const getDaysArray = function () {
 
     if (date.getMonth() !== curMonth) {
       curMonth = date.getMonth();
-      result.push({
-        id,
-        month: monthNames[date.getMonth()],
-        isDivider: true,
-      });
-      id += 1;
     }
   }
   return result;
 };
 
-function heatMapColorforValue(value) {
-  const h = (1.0 - value / 10) * 240;
-  return `hsl(${h}, 100%, 50%)`;
+function perc2color(perc) {
+  var r, g, b = 0;
+  if (perc < 50) {
+    r = 255;
+    g = Math.round(5.1 * perc);
+  }
+  else {
+    g = 255;
+    r = Math.round(510 - 5.10 * perc);
+  }
+  var h = r * 0x10000 + g * 0x100 + b * 0x1;
+  return '#' + ('000000' + h.toString(16)).slice(-6);
 }
 
 const daysInMonth = getDaysArray(2019, 11);
@@ -45,22 +48,52 @@ const daysInMonth = getDaysArray(2019, 11);
 function Main() {
   const [entries, setEntries] = useState(JSON.parse(window.localStorage.getItem('entries') || '{}'));
 
-  const change = (key, value) => {
+  const change = (key, time, value) => {
+    if (!entries[key]) {
+      entries[key] = {};
+    }
+    const updatedEntry = {
+      ...entries[key],
+      [time]: value,
+    };
     const updatedEntries = {
       ...entries,
-      [key]: value,
-    };
-
+      [key]: updatedEntry,
+    }
     setEntries(updatedEntries);
     window.localStorage.setItem('entries', JSON.stringify(updatedEntries));
   };
 
+  const getValue = (key, time) => {
+    return entries[key] ? entries[key][time] : ''
+  }
+
+  const getNoteValue = (key) => {
+    return entries[key] ? entries[key].note : ''
+  }
+
+  const onNoteChange = (key, value) => {
+    if (!entries[key]) {
+      entries[key] = {};
+    }
+    const updatedEntry = {
+      ...entries[key],
+      note: value,
+    };
+    const updatedEntries = {
+      ...entries,
+      [key]: updatedEntry,
+    }
+    setEntries(updatedEntries);
+    window.localStorage.setItem('entries', JSON.stringify(updatedEntries));
+  }
+
   return (
-    <div className="container">
+    <div className="mt-4">
       {daysInMonth.map((day) => (
-        <div key={day.id} className="card mb-4">
+        <div key={day.id} className="card mb-4 shadow-sm">
           <div className="row">
-            <div className="col-md-2 date" style={{ backgroundColor: heatMapColorforValue(entries[day.id]) }}>
+            <div className="col-md-2 date" >
               <h6 className="mb-3">
                 {day.month}
               </h6>
@@ -73,12 +106,13 @@ function Main() {
 
             <div className="col-md-2 entry">
               <div className="form-group">
-                <label htmlFor="exampleFormControlSelect1">Pain</label>
+                <label htmlFor="exampleFormControlSelect1">Morning</label>
                 <select
                   className="form-control"
                   id="exampleFormControlSelect1"
-                  onChange={(e) => change(day.id, parseInt(e.currentTarget.value, 10))}
-                  value={entries[day.id]}
+                  onChange={(e) => change(day.id, 'morning', parseInt(e.currentTarget.value, 10))}
+                  value={getValue(day.id, 'morning')}
+                  style={{ color: perc2color(100 - getValue(day.id, 'morning') * 10) }}
                 >
                   <option>-- Select --</option>
                   <option>1</option>
@@ -95,9 +129,59 @@ function Main() {
               </div>
             </div>
 
-            <div className="col-md-8 entry">
+            <div className="col-md-2 entry">
+              <div className="form-group">
+                <label htmlFor="exampleFormControlSelect1">Afternoon</label>
+                <select
+                  className="form-control"
+                  id="exampleFormControlSelect1"
+                  onChange={(e) => change(day.id, 'afternoon', parseInt(e.currentTarget.value, 10))}
+                  value={getValue(day.id, 'afternoon')}
+                  style={{ color: perc2color(100 - getValue(day.id, 'afternoon') * 10) }}
+                >
+                  <option>-- Select --</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                  <option>6</option>
+                  <option>7</option>
+                  <option>8</option>
+                  <option>9</option>
+                  <option>10</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="col-md-2 entry">
+              <div className="form-group">
+                <label htmlFor="exampleFormControlSelect1">Night</label>
+                <select
+                  className="form-control"
+                  id="exampleFormControlSelect1"
+                  onChange={(e) => change(day.id, 'night', parseInt(e.currentTarget.value, 10))}
+                  value={getValue(day.id, 'night')}
+                  style={{ color: perc2color(100 - getValue(day.id, 'night') * 10) }}
+                >
+                  <option>-- Select --</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                  <option>6</option>
+                  <option>7</option>
+                  <option>8</option>
+                  <option>9</option>
+                  <option>10</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="col-md-4 entry">
               <h6>Notes:</h6>
-              <textarea />
+              <textarea value={getNoteValue(day.id)} onChange={(e) => onNoteChange(day.id, e.currentTarget.value)} />
             </div>
           </div>
         </div>
