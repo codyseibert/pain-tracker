@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #d0ecff;
 }
 
 code {
@@ -25,9 +26,19 @@ code {
   padding: 10px;
   border-right: 1px solid rgba(0,0,0,.125);
   text-align: center;
+  background-color: #386FA4;
+  background-color: #59a5d8;
+  color: black;
+  text-shadow: 1px 1px 2px #fff;
+  padding-top: 20px;
 }
 
 .entry {
   float: right;
   padding: 10px;
+}
+
+.row {
+  margin-left: 0;
+  margin-right: 0;
 }

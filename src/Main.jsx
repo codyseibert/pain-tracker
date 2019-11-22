@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Slider from 'react-rangeslider';
+import 'react-rangeslider/lib/index.css';
 import './App.css';
 
 const getDaysArray = function () {
@@ -11,7 +13,9 @@ const getDaysArray = function () {
   const result = [];
   let id = 0;
   let curMonth = date.getMonth();
-  while (date.getFullYear() === year) {
+  let totalDays = 0;
+  while (date.getFullYear() === year && totalDays < 60) {
+    totalDays++;
     result.push({
       id,
       dayNumber: date.getDate(),
@@ -93,7 +97,9 @@ function Main() {
       {daysInMonth.map((day) => (
         <div key={day.id} className="card mb-4 shadow-sm">
           <div className="row">
-            <div className="col-md-2 date" >
+            <div className="col-md-2 date"
+              style={{ backgroundColor: perc2color(100 - getValue(day.id, 'morning') * 10) }}
+            >
               <h6 className="mb-3">
                 {day.month}
               </h6>
@@ -104,7 +110,7 @@ function Main() {
               </h5>
             </div>
 
-            <div className="col-md-2 entry">
+            {/* <div className="col-md-2 entry">
               <div className="form-group">
                 <label htmlFor="exampleFormControlSelect1">Morning</label>
                 <select
@@ -127,10 +133,10 @@ function Main() {
                   <option>10</option>
                 </select>
               </div>
-            </div>
+            </div> */}
 
-            <div className="col-md-2 entry">
-              <div className="form-group">
+            <div className="col-md-6 entry">
+              {/* <div className="form-group">
                 <label htmlFor="exampleFormControlSelect1">Afternoon</label>
                 <select
                   className="form-control"
@@ -151,10 +157,26 @@ function Main() {
                   <option>9</option>
                   <option>10</option>
                 </select>
+              </div> */}
+              <div className="form-group">
+                <label htmlFor="exampleFormControlSelect1">Pain Scale</label>
+
+                <Slider
+                  min={0}
+                  max={10}
+                  value={getValue(day.id, 'morning')}
+                  labels={{
+                    0: 'Low',
+                    5: 'Medium',
+                    10: 'High'
+                  }}
+                  handleLabel={getValue(day.id, 'morning')}
+                  onChange={(value) => change(day.id, 'morning', parseInt(value, 10))}
+                />
               </div>
             </div>
 
-            <div className="col-md-2 entry">
+            {/* <div className="col-md-2 entry">
               <div className="form-group">
                 <label htmlFor="exampleFormControlSelect1">Night</label>
                 <select
@@ -177,10 +199,10 @@ function Main() {
                   <option>10</option>
                 </select>
               </div>
-            </div>
+            </div> */}
 
             <div className="col-md-4 entry">
-              <h6>Notes:</h6>
+              <h6>Notes</h6>
               <textarea value={getNoteValue(day.id)} onChange={(e) => onNoteChange(day.id, e.currentTarget.value)} />
             </div>
           </div>
