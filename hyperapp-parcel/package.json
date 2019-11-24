@@ -1,0 +1,20 @@
+{
+  "name": "hyperapp-parcel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel src/index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hyperapp/events": "0.0.3",
+    "hyperapp": "^2.0.3",
+    "hyperapp-slider": "0.0.2",
+    "parcel": "^1.12.4",
+    "parcel-bundler": "^1.12.4"
+  }
+}

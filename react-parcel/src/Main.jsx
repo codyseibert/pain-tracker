@@ -93,7 +93,6 @@ function Main() {
   const renderSlider = (id, timeOfDay) => {
     return <div className="row mb-2">
       <div className="col-md-3">
-
         <label htmlFor="exampleFormControlSelect1">{timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)}</label>
       </div>
       <div className="col-md-9">
